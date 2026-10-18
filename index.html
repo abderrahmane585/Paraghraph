@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#171613">
+  <meta name="description" content="A personal account of a frightening moment at Omonia Metro Station in Athens.">
+  <title>The Day We Were Robbed in Athens</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <style>
+    :root {
+      --bg: #171613;
+      --panel: #211f1a;
+      --text: #f5f0e6;
+      --muted: #c0b8a8;
+      --gold: #d4ad62;
+      --line: rgba(245, 240, 230, .13);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'DM Sans', sans-serif;
+      background: radial-gradient(ellipse at top, #30281b 0, var(--bg) 48rem);
+      color: var(--text);
+      line-height: 1.75;
+    }
+    a { color: inherit; }
+    .wrap { width: min(1040px, calc(100% - 36px)); margin: 0 auto; }
+    header { padding: 22px 0; border-bottom: 1px solid var(--line); }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { color: var(--gold); font-weight: 700; letter-spacing: .14em; font-size: .78rem; text-transform: uppercase; }
+    .nav a { text-decoration: none; color: var(--muted); font-size: .9rem; }
+    .hero { padding: clamp(58px, 10vw, 112px) 0 62px; text-align: center; }
+    .eyebrow { color: var(--gold); text-transform: uppercase; letter-spacing: .2em; font-size: .75rem; font-weight: 700; }
+    h1, h2 { font-family: 'Playfair Display', Georgia, serif; line-height: 1.15; }
+    h1 { font-size: clamp(2.6rem, 7vw, 5.4rem); max-width: 850px; margin: 18px auto; letter-spacing: -.035em; }
+    .intro { max-width: 650px; margin: 0 auto; color: var(--muted); font-size: clamp(1rem, 2vw, 1.18rem); }
+    .button { display: inline-block; margin-top: 28px; padding: 12px 20px; border-radius: 999px; background: var(--gold); color: #1c1912; text-decoration: none; font-weight: 700; }
+    .story-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 34px; align-items: start; padding: 22px 0 78px; }
+    .story-card, .map-card { background: rgba(33, 31, 26, .88); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; }
+    .story-copy { padding: clamp(24px, 4vw, 38px); }
+    h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 18px; }
+    .story-copy p { color: #e3dccf; margin: 0 0 18px; }
+    .story-copy p:last-child { margin-bottom: 0; }
+    .photo { width: 100%; display: block; max-height: 370px; object-fit: cover; background: #302b22; }
+    .caption { color: var(--muted); font-size: .82rem; padding: 12px 20px 17px; }
+    .section { padding: 0 0 78px; }
+    .section-heading { max-width: 680px; margin-bottom: 24px; }
+    .section-heading p { color: var(--muted); margin-top: 0; }
+    .map-card { padding: 18px; }
+    #athens-map { height: 430px; width: 100%; border-radius: 14px; z-index: 1; }
+    .map-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 2px 2px; }
+    .map-hint { color: var(--muted); font-size: .88rem; margin: 0; }
+    .map-button { border: 1px solid var(--line); background: #302b22; color: var(--text); border-radius: 10px; padding: 10px 13px; font: inherit; cursor: pointer; }
+    .map-button:hover { border-color: var(--gold); }
+    .takeaway { border-left: 3px solid var(--gold); padding: 4px 0 4px 22px; color: var(--muted); font-size: 1.1rem; }
+    footer { border-top: 1px solid var(--line); padding: 25px 0 36px; color: var(--muted); font-size: .85rem; text-align: center; }
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #211f1a; color: #f5f0e6; }
+    .leaflet-popup-content { line-height: 1.5; }
+    .leaflet-container a.leaflet-popup-close-button { color: #f5f0e6; }
+    @media (max-width: 760px) {
+      .story-grid { grid-template-columns: 1fr; gap: 22px; }
+      #athens-map { height: 350px; }
+      .nav a { font-size: .82rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <div class="brand">A Personal Story · Athens</div>
+      <a href="#location">Explore the location ↓</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div class="eyebrow">A travel memory I won't forget</div>
+      <h1>The Day We Were Robbed in Athens</h1>
+      <p class="intro">A confusing question, a crowded metro, and a few tense seconds that changed how I think about staying alert while travelling.</p>
+      <a class="button" href="#story">Read my story ↓</a>
+    </section>
+
+    <section class="wrap story-grid" id="story">
+      <article class="story-card">
+        <div class="story-copy">
+          <h2>What happened</h2>
+          <p>One of the most frightening moments of our trip to Greece happened in the metro. We were standing with my parents when two people approached us and asked for directions to the airport. Their English was really bad, so at first, it was difficult to understand exactly what they were asking.</p>
+          <p>We all looked up and tried to help them, explaining that they needed to go back to the previous station and change lines. My mother was completely sure that she had closed the zipper of her bag, but a few seconds later, she looked down and realized that it was open. She immediately told me that her wallet was gone. Everything happened so quickly.</p>
+          <p>My dad and I surrounded the two people while trying to figure out what had happened. Then, suddenly, I saw one of them drop my mother's wallet onto the floor.</p>
+          <p>At that moment, I realized that the question about the metro had probably been a distraction while they were trying to steal from her bag. We got the wallet back, but it was an incredibly tense moment.</p>
+          <p>Even though we were lucky that nothing important was lost, that experience taught me to be much more careful in crowded places, especially when strangers suddenly approach you and try to distract you.</p>
+        </div>
+      </article>
+
+      <figure class="story-card" style="margin:0">
+        <img class="photo" src="assets/station.jfif" alt="Metro station connected to my experience in Athens" loading="lazy">
+        <figcaption class="caption">Omonia Metro Station, Athens — the location of this experience.</figcaption>
+      </figure>
+    </section>
+
+    <section class="wrap section" id="location">
+      <div class="section-heading">
+        <div class="eyebrow">The place</div>
+        <h2>Where it happened</h2>
+        <p>The incident happened at Omonia Station in Athens. You can click anywhere on the map to add your own notes and mark places connected to the story.</p>
+      </div>
+      <div class="map-card">
+        <div id="athens-map" aria-label="Interactive map of Omonia Station in Athens"></div>
+        <div class="map-tools">
+          <p class="map-hint">📍 Click the map to add a marker and a note.</p>
+          <button class="map-button" id="reset-map" type="button">Return to Omonia</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap section">
+      <div class="section-heading">
+        <div class="eyebrow">What I learned</div>
+        <h2>A reminder for other travellers</h2>
+      </div>
+      <p class="takeaway">Stay aware of your belongings in crowded places. If someone unexpectedly distracts you, take a moment to check that your bags are still secure.</p>
+    </section>
+  </main>
+
+  
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Approximate map position for Omonia Station, Athens.
+    const omonia = [37.9841, 23.7280];
+    const map = L.map('athens-map').setView(omonia, 16);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    L.marker(omonia).addTo(map)
+      .bindPopup('<strong>Omonia Station</strong><br>Athens, Greece<br><small>The location of my experience.</small>')
+      .openPopup();
+
+    // Click anywhere on the map to add a custom marker.
+    map.on('click', function (event) {
+      const titleInput = prompt('Give this location a title:');
+      if (titleInput === null || !titleInput.trim()) return;
+
+      const noteInput = prompt('Add a note about this location (optional):') || '';
+      const title = escapeHtml(titleInput.trim());
+      const note = escapeHtml(noteInput.trim());
+      const lat = event.latlng.lat;
+      const lng = event.latlng.lng;
+
+      L.marker([lat, lng]).addTo(map).bindPopup(
+        '<strong>' + title + '</strong>' +
+        (note ? '<br>' + note : '') +
+        '<br><small>' + lat.toFixed(5) + ', ' + lng.toFixed(5) + '</small>'
+      ).openPopup();
+    });
+
+    document.getElementById('reset-map').addEventListener('click', function () {
+      map.setView(omonia, 16);
+    });
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>"']/g, function (char) {
+        return ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        })[char];
+      });
+    }
+  </script>
+</body>
+</html>
